@@ -1,4 +1,5 @@
 import cv2 as cv
+import numpy as np
 
 defaultRes = (920, 920)
 
@@ -11,7 +12,7 @@ def reScaleImage(image, res=defaultRes):
         (INTER_AREA for downscale).
 
     Args:
-        image (cv): image to upscale or downscale
+        image (cv): Image to upscale or downscale
 
     Returns:
         scaledImage: Image set to the default scale
@@ -24,5 +25,19 @@ def reScaleImage(image, res=defaultRes):
     return scaledImage
 
 
-cv.imshow("Camera Feed", reScaleImage(img))
+def sharpenImage(image):
+    """Sharpens image using Laplacien 2D kernel and convolution
+
+    Args:
+        image (cv): Image to sharpen
+
+    Returns:
+        sharpenedImage: Result of the convolution with Laplacian kernel
+    """
+    kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+    sharpenedImage = cv.filter2D(image, -1, kernel)
+    return sharpenedImage
+
+
+cv.imshow("Camera Feed", sharpenImage(reScaleImage(img)))
 k = cv.waitKey(0)
